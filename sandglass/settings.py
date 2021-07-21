@@ -9,23 +9,34 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
 from pathlib import Path
+from decouple import config
+import dj_database_url
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'collect_static')
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+STATICFILES_DIRS = [
+    'static',
+]
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
+#
+# heroku
+#
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# deprecated STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-w)62subb09d6*ti1_&u#m_(@$q#k67^jdoje=2$=9zluyz0r-g'
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', '*').split(',')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -54,7 +65,9 @@ ROOT_URLCONF = 'sandglass.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            'templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -70,15 +83,23 @@ TEMPLATES = [
 WSGI_APPLICATION = 'sandglass.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+#
+# DATABASE
+#
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DATABASE_NAME', ''),
+        'USER': config('DATABASE_USER', ''),
+        'PASSWORD': config('DATABASE_PASSWORD', ''),
+        'HOST': config('DATABASE_HOST', ''),
+        'PORT': '5432',
     }
 }
+# configure database for heroku
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 
 # Password validation

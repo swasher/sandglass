@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="Description" lang="ru" content="Place for all your movies is there">
+    <meta name="author" content="Swasher">
+    <meta name="robots" content="index, follow">
+
+    {% block meta %}{% endblock %}
+
+    <!-- load django template tag -->
+    {% load static %}
+    {% load admin_urls %}
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.rawgit.com/IonDen/ion.sound/master/js/ion.sound.min.js"></script>
+
+    <!-- Own CSS and JS -->
+    <link rel="stylesheet" href="{% static "main.css" %}">
+{#    <script src="{% static "csfr_ajax.js" %}"></script>#}
+
+    <title>Sandglass Timer</title>
+
+</head>
+
+<body class="d-flex flex-column">
+
+    {% comment %} DEPRECATED <div id="snoAlertBox" class="alert" data-alert="alert"></div>{% endcomment %}
+    {% include "messages.html" %}
+
+    <div class="container flex-grow">
+        {% include "navbar.html" %}
+        {% block title %}    {% endblock %}
+        {% block content %}  {% endblock %}
+    </div>
+
+
+</body>
+</html>
