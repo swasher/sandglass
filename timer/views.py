@@ -1,7 +1,10 @@
+import datetime
+
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Timing, RawData, Manager
 from .util import clock_off
@@ -12,11 +15,15 @@ def hello(request):
     # delta = 0
     managers = Manager.objects.all()
 
-    last_click = RawData.objects.filter(prepresser=request.user).latest('time')
-    if last_click.button == 'start':  # это значит, что старт нажали, и пока бежал секундомер, страница была перезагружена.
-        pass
+    duration = 0
+    try:
+        last_click = RawData.objects.filter(prepresser=request.user).latest('time')
+        if last_click.button == 'start':  # это значит, что старт нажали, и пока бежал секундомер, страница была перезагружена.
+            duration = last_click.time - datetime.datetime.now()
+    except ObjectDoesNotExist:
+        pass  # Этот эксепшн возникает, если вьюха запускается на пустой базе данных
 
-    return render(request, 'timer.html', {'delta': delta, 'managers': managers})
+    return render(request, 'timer.html', {'delta': delta, 'managers': managers, 'duration': duration})
 
 
 @login_required

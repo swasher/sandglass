@@ -19,6 +19,9 @@ timer.addEventListener('reset', function (e) {
 
 
 $(document).ready(function() {
+    // var data = JSON.parse("{{data|escapejs}}");
+    console.log('DURATION', "{{duration}}")
+
     $('#stopButtonZ').prop('disabled', true);
     $('#stopButtonM').prop('disabled', true);
 
