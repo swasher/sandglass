@@ -1,0 +1,30 @@
+[
+{
+    "model": "timer.manager",
+    "pk": 1,
+    "fields": {
+        "name": "Иванов"
+    }
+},
+{
+    "model": "timer.manager",
+    "pk": 2,
+    "fields": {
+        "name": "Бирюков"
+    }
+},
+{
+    "model": "timer.manager",
+    "pk": 3,
+    "fields": {
+        "name": "Шубин"
+    }
+},
+{
+    "model": "timer.manager",
+    "pk": 4,
+    "fields": {
+        "name": "Никофоров"
+    }
+}
+]

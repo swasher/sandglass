@@ -14,4 +14,11 @@ cleardb:
 	sleep 3
 	python manage.py makemigrations timer
 	python manage.py migrate
+	#python manage.py loaddata manager
 	python manage.py createsuperuser --username=swasher --email=mr.swasher@gmail.com;
+
+fixtures:
+	python manage.py dumpdata timer.Manager --indent 4 --output timer/fixtures/manager.json
+
+start_postgres:
+	docker compose up -d

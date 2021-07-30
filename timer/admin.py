@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 @admin.register(Timing)
 class TimingAdmin(admin.ModelAdmin):
 
-    list_display = ('prepresser', 'order', 'signatime', 'designtime', 'packagetime')
+    list_display = ('prepresser', 'order', 'manager', 'jobnote', 'signatime', 'designtime', 'packagetime')
 
 
 @admin.register(RawData)
@@ -18,7 +18,7 @@ class RawDataAdmin(admin.ModelAdmin):
     time_seconds.admin_order_field = 'timefield'
     time_seconds.short_description = 'Precise Time'
 
-    list_display = ('prepresser', 'order', 'jobtype', 'button', 'time_seconds',)
+    list_display = ('prepresser', 'order', 'jobtype', 'button', 'time_seconds', 'manager', 'jobnote')
 
 
 @admin.register(Manager)

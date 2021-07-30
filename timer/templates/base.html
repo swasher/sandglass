@@ -1,14 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<body class="d-flex flex-column">
-
-<div class="container flex-grow">
-  {% block content %}  {% endblock %}
-</div>
-
-
-</body>
-
 <head>
 
   <!-- meta -->
@@ -18,8 +9,6 @@
   <meta name="Description" lang="ru" content="Place for all your movies is there">
   <meta name="author" content="Swasher">
   <meta name="robots" content="index, follow">
-
-  {% block meta %}{% endblock %}
 
   <!-- load django template tag -->
   {% load static %}
@@ -43,17 +32,28 @@
   <!-- Easytimer JS -->
   <script src="https://cdn.jsdelivr.net/npm/easytimer@1.1.3/src/easytimer.min.js"></script>
 
-  <!-- Easytimer JS -->
-  <script src="https://unpkg.com/imask"></script>
+  <!-- Imask - для input mask -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/imask/6.1.0/imask.min.js" integrity="sha512-201IYuQ6RPr47FIs+sGreRBawUyClKluxHg2C5Q5c888sr9Ew5WBj1Cgo/UY7Lcs1Fk+FKX+K5TTbWV1rU+FgQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+  <!-- RobinHerbots / Inputmask - для input mask -->
+{#  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/inputmask.min.js" integrity="sha512-8Pg78xnPfP0dVd8QJNLdDKze4oLb4ygYlwbG4NloTPbQiILb3WoZxgcZm1FOXywNQtiB3H2nCQJt2csxEw172g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>#}
 
   <!-- Own CSS and JS -->
-  <script src="{% static "validation.js" %}"></script>
   <link rel="stylesheet" href="{% static "style.css" %}">
-  <script src="{% static "static.js" %}"></script>
   {#    <script src="{% static "csfr_ajax.js" %}"></script>#}
+
+  {% block head %}{% endblock %}
 
   <title>Sandglass Timer</title>
 
 </head>
+
+<body class="d-flex flex-column">
+
+  <div class="container flex-grow">
+    {% block content %}  {% endblock %}
+  </div>
+
+</body>
+
 </html>

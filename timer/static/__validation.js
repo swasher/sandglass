@@ -1,3 +1,5 @@
+// DEPRECATED
+
 // https://codepen.io/Amerey/pen/MWYvLYp
 
 const inputs = document.querySelectorAll('#order'); /* cange '#order' to 'input' for validate all input fields */

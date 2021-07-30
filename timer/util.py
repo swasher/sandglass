@@ -25,7 +25,11 @@ def clock_off():
     "week_number":29}
     """
 
-    response = urllib.request.urlopen(server_url)
+    from urllib.error import HTTPError
+    try:
+        response = urllib.request.urlopen(server_url)
+    except HTTPError:
+        return None
     answer = json.load(response)
     internet_dt = datetime.fromisoformat(answer['datetime'])  # здесь локальное время. Оба имеют тип datetime.datetime
 
