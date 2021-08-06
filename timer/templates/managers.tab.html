@@ -17,7 +17,7 @@
 
   <div class="col-4">
     <select class="form-select" aria-label="Default select example" id="sel-manager">
-      <option selected>Выбери манагера</option>
+      <option selected value="0">Выбери манагера</option>
       {% for manager in managers %}
           <option value="{{ manager.id }}"> {{ manager.name }} </option>
       {% endfor %}
@@ -30,15 +30,35 @@
     </div>
   </div>
 
-  <div class="col-8">
-    <input id="jobnote" class="form-control" placeholder="Понятное описание работы" autocomplete="on">
-    <div class="valid-feedback">
-      Looks good!
+{#  <div class="col-8">#}
+{#    <input id="jobnote" class="form-control" placeholder="Понятное описание работы" autocomplete="on">#}
+{#    <div class="valid-feedback">#}
+{#      Looks good!#}
+{#    </div>#}
+{#    <div class="invalid-feedback">#}
+{#      Too short description.#}
+{#    </div>#}
+{#  </div>#}
+
+  <div class="col-7">
+    <input class="form-control" autocomplete="off"  list="datalistOptions" id="jobnote" placeholder="Понятное описание работы">
+
+    <datalist id="datalistOptions">
+        <option id="0" value="value"></option>
+    </datalist>
+    <div id="count" class="valid-feedback">
+      <span class="badge bg-info">0</span> Looks good!
     </div>
-    <div class="invalid-feedback">
-      Too short description.
+    <div id="count" class="invalid-feedback">
+      <span class="badge bg-info">0</span> Too short description.
     </div>
   </div>
+
+
+{##}
+{#  <div id="count" class="col pt-1">#}
+{#      <span class="badge bg-info">0</span>#}
+{#  </div>#}
 
 
 </form>

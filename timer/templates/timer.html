@@ -3,7 +3,9 @@
 
 {% block head %}
   <script>
-      let duration = "{{ duration|safe }}"
+      duration = "{{ duration|safe }}"
+      {#restoring = "{{ restoring|safe }}"#}
+      restoring = {{ restoring|safe }}
   </script>
   <script src="{% static "static.js" %}"></script>
 {% endblock %}
@@ -52,25 +54,23 @@
     </div>
   </div>
 
-  <ul class="nav nav-tabs mt-2" id="myTab" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="order-tab" data-bs-toggle="tab" data-bs-target="#order-target" type="button"
-              role="tab" aria-controls="order" aria-selected="true">Заказы
+<nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <button class="nav-link active" id="nav-tab-order" data-bs-toggle="tab" data-bs-target="#tabs-1" type="button"
+              role="tab" aria-controls="tabs-1" aria-selected="true">Заказы
       </button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="managers-tab" data-bs-toggle="tab" data-bs-target="#managers-target" type="button"
-              role="tab" aria-controls="managers" aria-selected="false">Манагеры
+      <button class="nav-link" id="nav-tab-manager" data-bs-toggle="tab" data-bs-target="#tabs-2" type="button"
+              role="tab" aria-controls="tabs-2" aria-selected="false">Манагеры
       </button>
-    </li>
-  </ul>
-
+  </div>
+</nav>
+  {#  data-bs-target <-connect-> id  #}
 
   <div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="order-target" role="tabpanel" aria-labelledby="order-tab">
+    <div class="tab-pane fade show active" id="tabs-1" role="tabpanel" aria-labelledby="tabs-tab1">
       {% include "zakaz.tab.html" %}
     </div>
-    <div class="tab-pane fade" id="managers-target" role="tabpanel" aria-labelledby="profile-tab">
+    <div class="tab-pane fade" id="tabs-2" role="tabpanel" aria-labelledby="tabs-2">
       {% include "managers.tab.html" %}
     </div>
   </div>
@@ -78,19 +78,19 @@
 
   <div class="d-flex mt-2">
     <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" name="jobRadio" id="jobRadio1" value="Signa"
+      <input class="form-check-input" type="radio" name="jobRadio" id="radio-Signa" value="Signa"
              checked>
-      <label class="form-check-label" for="jobRadio1">Signa</label>
+      <label class="form-check-label" for="radio-Signa">Signa</label>
     </div>
 
     <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" name="jobRadio" id="jobRadio2" value="Design">
+      <input class="form-check-input" type="radio" name="jobRadio" id="radio-Design" value="Design">
       <label class="form-check-label" for="jobRadio2">Design</label>
     </div>
 
     <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" name="jobRadio" id="jobRadio3" value="Package">
-      <label class="form-check-label" for="jobRadio3">Package</label>
+      <input class="form-check-input" type="radio" name="jobRadio" id="radio-Package" value="Package">
+      <label class="form-check-label" for="radio-Package">Package</label>
     </div>
   </div>
 
