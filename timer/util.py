@@ -4,7 +4,7 @@ from datetime import datetime
 import urllib.request
 
 
-def clock_off():
+def clock_offset():
     """
     Возвращает разницы между временем компьютера и точным интернет временем. Точно не показывает из-за лага запроса.
     :return:

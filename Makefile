@@ -20,5 +20,5 @@ cleardb:
 fixtures:
 	python manage.py dumpdata timer.Manager --indent 4 --output timer/fixtures/manager.json
 
-start_postgres:
+docker:
 	docker compose up -d

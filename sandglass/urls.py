@@ -17,13 +17,13 @@ from django.contrib import admin
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import path, include
 from django.views.generic import RedirectView
+from django.contrib.auth import views as auth_views
 
 from timer import views
+from timer.forms import UserLoginForm
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('timer.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/profile', views.hello, name='hello'),
-    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('favicon.ico')))
+    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('favicon.ico'))),
 ]

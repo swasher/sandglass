@@ -173,7 +173,7 @@ function set_state_stopped() {
 
 function restore_on_reload() {
     // TODO нужно возвращать номер заказа, манагера и дескрипшн
-    if (duration) {
+    if (restoring.duration) {
         // сюда попадаем, если юзер включил таймер и перезагрузил страницу. Django возвращает в переменной
         // duration, сколько прошоло времени с запуска
         console.log('restoring order:', restoring.order)
@@ -181,11 +181,23 @@ function restore_on_reload() {
         console.log('restoring jobnote:', restoring.jobnote)
         console.log('restoring jobtype:', restoring.jobtype)
 
-        let seconds = parseInt(duration)
+        let seconds = parseInt(restoring.duration)
         set_state_running(seconds, restoring)
     } else {
         set_state_stopped()
     }
+}
+
+
+function test_get_time() {
+    fetch('http://worldtimeapi.org/api/timezone/Europe/Moscow')
+        .then(res => res.json())
+        .then((out) => {
+            console.log('Output: ', out);
+        }).catch(err => console.error(err));
+
+    var now = new Date();
+    // console.log(now)
 }
 
 
@@ -194,6 +206,8 @@ $(document).ready(function () {
     activate_manager_mask_and_validation()
     activate_jobnote_mask_and_validation()
     restore_on_reload()
+
+    test_get_time()
 
     $('#startButton').on('click', function () {
         let active_tab = document.querySelectorAll('#nav-tab button[aria-selected="true"]')[0].id
