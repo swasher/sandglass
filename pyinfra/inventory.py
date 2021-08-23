@@ -1,1 +1,3 @@
-ssh_user = 'swasher'
+host = [
+    ('sandglass', {'ssh_user': 'swasher'}),
+]

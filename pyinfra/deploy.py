@@ -1,17 +1,42 @@
-from pyinfra.operations import apt, server
+"""
+pyinfra inventory.py deploy.py  -vvv
+"""
 
-host = ['sandglass']
+from pyinfra.operations import apt, server, files
+from pyinfra.api import deploy
 
 server.shell(
-    name='Run an ad-hoc command',  # optional name for the operation
-    commands=['echo "hello world"'],
+    name='Run an ad-hoc command',
+    chdir='sandglass',
+    get_pty=True,
+    stdin='yes',
+    commands=[
+        'git fetch --all',
+        'git reset --hard origin/master',
+        '/home/swasher/.local/bin/pipenv install',
+        '/home/swasher/.local/bin/pipenv run python manage.py collectstatic',
+        # 'sudo systemctl restart gunicorn',
+        # 'sudo systemctl restart nginx'
+    ],
 )
 
-@deploy('Fetch')
-def git_fetch(state=None, host=None):
-    apt.packages(
-        name='Install MariaDB apt package',
-        packages=['mariadb-server'],
-        state=state,  # note passing of state & host here
-        host=host,
-    )
+# files.file(
+#     name='Create pyinfra log file',
+#     path='/home/swasher/111.txt',
+#     user='swasher',
+#     group='swasher',
+#     mode='644',
+#     sudo=True,
+# )
+
+
+# @deploy('Install test')
+# def test1(state=None, host=None):
+#     files.file(
+#         name='Create pyinfra log file',
+#         path='/home/swasher/111.txt',
+#         user='swasher',
+#         group='swasher',
+#         mode='644',
+#         sudo=True,
+#     )
