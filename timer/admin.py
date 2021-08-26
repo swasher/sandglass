@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 class TimingAdmin(admin.ModelAdmin):
 
     list_display = ('prepresser', 'order', 'manager', 'jobnote', 'signatime', 'designtime', 'packagetime')
+    search_fields = ['order']
 
 
 @admin.register(RawData)

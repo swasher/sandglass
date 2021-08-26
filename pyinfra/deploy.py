@@ -15,6 +15,8 @@ server.shell(
         'git reset --hard origin/master',
         '/home/swasher/.local/bin/pipenv install',
         '/home/swasher/.local/bin/pipenv run python manage.py collectstatic',
+        '/home/swasher/.local/bin/pipenv run python manage.py migrate',
+
         # 'sudo systemctl restart gunicorn',
         # 'sudo systemctl restart nginx'
     ],

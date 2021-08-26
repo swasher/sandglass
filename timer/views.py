@@ -9,14 +9,15 @@ from django.core.serializers import serialize
 
 from .models import Timing, RawData, Manager
 from .util import clock_offset
+from .util import get_fulltime_by_order, get_fulltime_by_manager, get_order_info
 from .forms import UserLoginForm
 
 
 @login_required
 def hello(request):
 
-    delta = clock_offset()
-    # delta = 0
+    # delta = clock_offset()
+    delta = 0
     managers = Manager.objects.all()
 
     restoring = dict()
@@ -41,6 +42,12 @@ def hello(request):
             restoring['jobtype'] = last_click.jobtype
             restoring = json.dumps(restoring)
 
+            if restoring['managerid']:
+                restoring['fulltime'] = get_fulltime_by_manager(restoring['managerid'], restoring['jobnote'])
+            else:
+                restoring['fulltime'] = get_fulltime_by_order(restoring['order'])
+
+
             # print('duration', datetime.datetime.now() - last_click.time)
             # print('duration in sec', (datetime.datetime.now() - last_click.time).total_seconds())
     except ObjectDoesNotExist:  # empty database
@@ -54,7 +61,7 @@ def hello(request):
 @login_required
 @ensure_csrf_cookie
 def click_start(request):
-    error = 'all ok'
+    error = 'ok'
     if request.is_ajax() and request.method == 'GET':
         GET = request.GET
 
@@ -85,7 +92,7 @@ def click_start(request):
 @login_required
 @ensure_csrf_cookie
 def click_stop(request):
-    error = 'all ok'
+    error = 'ok'
     if request.is_ajax() and request.method == 'GET':
         GET = request.GET
 
@@ -161,7 +168,6 @@ def click_stop(request):
 @login_required
 @ensure_csrf_cookie
 def click_cancel(request):
-    error = 'all ok'
     if request.is_ajax() and request.method == 'GET':
         last_raw = RawData.objects.latest('time')
         if last_raw.button == 'start':
@@ -169,7 +175,7 @@ def click_cancel(request):
             last_raw.delete()
             error = f'{_} sucessfully deleted'
         else:
-            error = f'Last record not a "start"'
+            error = 'Last record not a "start"'
     else:
         error = 'non ajax or non GET'
 
@@ -180,7 +186,7 @@ def click_cancel(request):
 @login_required
 @ensure_csrf_cookie
 def get_latest_jobnotes(request):
-    results = {'error': 'all ok'}
+    results = {'error': 'ok'}
 
     if request.is_ajax() and request.method == 'GET':
         GET = request.GET
@@ -189,6 +195,21 @@ def get_latest_jobnotes(request):
         latest_jobnotes = RawData.objects.filter(manager_id=managerid, button='start', time__gt=two_month).values_list('jobnote', flat=True)
         latest_jobnotes = list(dict.fromkeys(latest_jobnotes))  # remove duplicates
         results['latest_jobnotes'] = json.dumps(list(latest_jobnotes), ensure_ascii=False)
+    else:
+        results['error'] = 'non ajax or non GET'
+
+    return JsonResponse(results)
+
+
+@login_required
+@ensure_csrf_cookie
+def get_info(request):
+    results = dict()
+
+    if request.is_ajax() and request.method == 'GET':
+        GET = request.GET
+        order = GET['order']
+        results = get_order_info(order)
     else:
         results['error'] = 'non ajax or non GET'
 

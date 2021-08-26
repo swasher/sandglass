@@ -3,3 +3,5 @@
 *.pyc
 temp
 .env.production
+/timer/test.py
+/timer/ICSPortal.xml

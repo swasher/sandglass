@@ -2,6 +2,8 @@ import json
 import pytz
 from datetime import datetime
 import urllib.request
+from lxml import etree
+from .models import Timing, RawData, Manager
 
 
 def clock_offset():
@@ -39,3 +41,46 @@ def clock_offset():
     seconds = (local_dt - internet_dt).total_seconds()  # in seconds with decimals
     delta = f'{seconds:.1f}'
     return delta
+
+
+def get_fulltime_by_order(order):
+    """
+    Возвращает время, потраченное на работу (если известен номер заказа)
+    :param order: string, number of order
+    :return: datetime, время потраченное на заказ
+    """
+    obj = Timing.objects.get(order=order)
+    alltime = obj.signatime + obj.designtime + obj.packagetime
+    return alltime
+
+
+def get_fulltime_by_manager(managerid, note):
+    obj = Timing.objects.filter(manager_id=managerid).filter(jobnote=note)
+    if obj.count() > 1:
+        # для каждого манагера описания работ - уникальны.
+        # Если в базе больше одного - значит, что-то пошло не так в системе.
+        raise Exception
+
+# Наверное, нужно как-то комбинировать дату и jobnote, чтобы создавать подобие идентификатора работы.
+# Потому что у манагера может быть в январе "Красный пакет", и в октябре и в марте.
+
+
+def get_order_info(order):
+    xml_path = f'http://pim:6092/icsportal/showJDF/ICSPortal?raw=true&format=JDF&qeID={order}'
+    xmlroot = etree.parse(xml_path)
+
+    ns = "{http://www.CIP4.org/JDFSchema_1_1}"
+    ns2 = {"HDM": "www.heidelberg.com/schema/HDM"}
+
+    info = dict()
+
+    try:
+        info['jobname'] = xmlroot.getroot().attrib['DescriptiveName']
+        info['manager_email'] = xmlroot.findall(f'./{ns}ResourcePool/{ns}CustomerInfo/{ns}Contact/{ns}ComChannel')[0].get(
+            'Locator')
+        info['manager_name'] = xmlroot.findall(f'./{ns}ResourcePool/{ns}Person')[0].get('FirstName')
+        info['error'] = 'ok'
+    except KeyError:
+        info['error'] = 'Job not found (or another parse error)'
+
+    return info

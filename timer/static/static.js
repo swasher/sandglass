@@ -14,6 +14,26 @@ timer.addEventListener('reset', function (e) {
 });
 
 
+function update_job_info(order) {
+    $.ajax({
+        url: '/get_info/',
+        dataType: 'json',
+        data: {order: order},
+        success: function (data) {
+            console.log(data)
+            console.log('«GET JOB INFO» RETURNED DATA:', data.error)
+            if (data['error'] === 'ok') {
+                console.log('jobname', data.jobname)
+                console.log('manager_name', data.manager_name)
+                console.log('manager_email', data.manager_email)
+                $('#manager-name').text(data.manager_name)
+                $('#job-name').text(data.jobname)
+            }
+        }
+    })
+}
+
+
 function activate_order_mask_and_validation() {
     let input = document.getElementById('order');
     let maskOptions = {
@@ -24,6 +44,8 @@ function activate_order_mask_and_validation() {
     function valid_control() {
         if (mask.masked.isComplete) {
             input.className = 'form-control is-valid';
+            // ========== Здесь мы вызываем функцию обновления данных о заказе
+            update_job_info(mask.value)
         } else {
             input.className = 'form-control is-invalid';
         }
@@ -31,16 +53,19 @@ function activate_order_mask_and_validation() {
 
     valid_control()
 
-    // 'accept' event fired on input when mask value has changed
+
     function log() {
-        // console.log('value', mask.value)
-        // console.log('unmaskedValue', mask.unmaskedValue)
-        // console.log('typedValue', mask.typedValue)
-        // console.log('isComplete', mask.masked.isComplete) true if input is valid
-        // console.log('-------------------')
-        valid_control()
+        console.log('value', mask.value)
+        console.log('unmaskedValue', mask.unmaskedValue)
+        console.log('typedValue', mask.typedValue)
+        console.log('isComplete', mask.masked.isComplete)  // true if input is valid
+        console.log('-------------------')
     };
-    mask.on("accept", log);
+
+    // 'accept' event fired on input when mask value has changed
+    mask.on("accept", function () {
+        valid_control()
+    });
 
     // 'complete' event fired when the value is completely filled
     // Note: this makes sense only for Pattern-based masks
@@ -101,7 +126,7 @@ function activate_manager_mask_and_validation() {
             data: {managerid: input.val()},
             success: function (data) {
                 console.log('«GET JOBNOTES» RETURNED DATA:', data['error'])
-                if (data['error'] === 'all ok') {
+                if (data['error'] === 'ok') {
                     let latest_jobnotes = JSON.parse(data['latest_jobnotes']);
                     fillDataList(latest_jobnotes)
                 }
@@ -226,7 +251,7 @@ $(document).ready(function () {
                 dataType: 'json',
                 success: function (answer) {
                     console.log('«START» RETURNED DATA:', answer['error'])
-                    if (answer['error'] === 'all ok') {
+                    if (answer['error'] === 'ok') {
                         set_state_running(0, null)
                     }
                 }
@@ -274,7 +299,7 @@ $(document).ready(function () {
             dataType: 'json',
             success: function (answer) {
                 console.log('«STOP» RETURNED DATA:', answer['error'])
-                if (answer['error'] === 'all ok') {
+                if (answer['error'] === 'ok') {
                     set_state_stopped();
                 }
             }

@@ -23,4 +23,5 @@ urlpatterns = [
     path('click_stop/', views.click_stop, name='click_stop'),
     path('click_cancel/', views.click_cancel, name='click_cancel'),
     path('get_latest_jobnotes/', views.get_latest_jobnotes, name='get_latest_jobnotes'),
+    path('get_info/', views.get_info, name='get_info'),
 ]
