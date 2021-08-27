@@ -25,4 +25,4 @@ class RawDataAdmin(admin.ModelAdmin):
 @admin.register(Manager)
 class ManagerAdmin(admin.ModelAdmin):
 
-    list_display = ('name',)
+    list_display = ('name', 'email', 'asystem_name')

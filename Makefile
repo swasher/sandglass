@@ -20,5 +20,11 @@ cleardb:
 fixtures:
 	python manage.py dumpdata timer.Manager --indent 4 --output timer/fixtures/manager.json
 
+build:
+	docker compose up -d  --build
+
 up:
 	docker compose up -d
+
+make_requirements:
+	pipenv run pip freeze > requirements.txt

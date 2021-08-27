@@ -14,6 +14,7 @@ lxml = "*"
 
 [dev-packages]
 pyinfra = "*"
+fabric = "*"
 
 [requires]
 python_version = "3.9"

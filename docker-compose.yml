@@ -3,6 +3,17 @@ version: "3.9"
 volumes:
     postgres_data:
 services:
+  web:
+    container_name: dev_backend
+    build: .
+    restart: always
+    env_file: .env
+    command: gunicorn sandglass.wsgi:application --bind 0.0.0.0:5000
+    volumes:
+     - .:/app
+#     - static_volume:/app/static
+    depends_on:
+     - db
   db:
     image: postgres
     volumes:
