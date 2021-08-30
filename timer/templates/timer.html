@@ -17,8 +17,10 @@
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
         <i class="bi-alarm" style="font-size: 2rem; color: cornflowerblue;"></i>
-        SandGlass timetracker [clock error: {{ delta }}s]
+        <b>SandGlass timetracker</b>
+        <span id="delta" class="badge bg-primary"></span>
       </a>
+
 
       {% if user.is_authenticated %}
         <div class="navbar-form navbar-right btn-group">

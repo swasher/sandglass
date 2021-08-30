@@ -8,6 +8,9 @@ from .models import Timing, RawData, Manager
 
 def clock_offset():
     """
+    DEPRECATED
+    Now time delta calculated on client by js, due to big time lag in this function.
+
     Возвращает разницы между временем компьютера и точным интернет временем. Точно не показывает из-за лага запроса.
     :return:
     """

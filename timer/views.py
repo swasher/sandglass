@@ -15,9 +15,6 @@ from .forms import UserLoginForm
 
 @login_required
 def hello(request):
-
-    # delta = clock_offset()
-    delta = 0
     managers = Manager.objects.all()
 
     restoring = dict()
@@ -47,7 +44,6 @@ def hello(request):
             else:
                 restoring['fulltime'] = get_fulltime_by_order(restoring['order'])
 
-
             # print('duration', datetime.datetime.now() - last_click.time)
             # print('duration in sec', (datetime.datetime.now() - last_click.time).total_seconds())
     except ObjectDoesNotExist:  # empty database
@@ -55,7 +51,7 @@ def hello(request):
     except TypeError:  # user is not logged in
         last_click = ''
 
-    return render(request, 'timer.html', {'delta': delta, 'managers': managers, 'restoring': restoring})
+    return render(request, 'timer.html', {'managers': managers, 'restoring': restoring})
 
 
 @login_required
@@ -186,12 +182,13 @@ def click_cancel(request):
 @login_required
 @ensure_csrf_cookie
 def get_latest_jobnotes(request):
+    days = 30
     results = {'error': 'ok'}
 
     if request.is_ajax() and request.method == 'GET':
         GET = request.GET
         managerid = GET['managerid']
-        two_month = datetime.datetime.now() - datetime.timedelta(days=30)
+        two_month = datetime.datetime.now() - datetime.timedelta(days=days)
         latest_jobnotes = RawData.objects.filter(manager_id=managerid, button='start', time__gt=two_month).values_list('jobnote', flat=True)
         latest_jobnotes = list(dict.fromkeys(latest_jobnotes))  # remove duplicates
         results['latest_jobnotes'] = json.dumps(list(latest_jobnotes), ensure_ascii=False)

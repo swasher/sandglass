@@ -65,6 +65,7 @@ function activate_order_mask_and_validation() {
     // 'accept' event fired on input when mask value has changed
     mask.on("accept", function () {
         valid_control()
+        // log()
     });
 
     // 'complete' event fired when the value is completely filled
@@ -107,10 +108,14 @@ function activate_manager_mask_and_validation() {
     }
 
     function fillDataList(optionList) {
+        /*
+        Заполняет выпадающий список `datalistOptions` списком его работ `optionList`.
+        Вызывается из get_latest_jobnotes, при выборе менеджера.
+         */
         let container = document.getElementById('datalistOptions');
         let str=''; // variable to store the options
 
-        for (var i=0; i < optionList.length;++i){
+        for (let i=0; i < optionList.length;++i){
             str += '<option value="'+optionList[i]+'" />'; // Storing options in variable
             // example <option value="{{ manager.id }}"> {{ manager.name }} </option>
         }
@@ -120,6 +125,10 @@ function activate_manager_mask_and_validation() {
     }
 
     function get_latest_jobnotes() {
+        /*
+        Получает с сервера список работ менеджера за последние n дней.
+        n захаркоджено во view.py в get_latest_jobnotes()
+         */
         $.ajax({
             url: '/get_latest_jobnotes/',
             dataType: 'json',
@@ -215,14 +224,40 @@ function restore_on_reload() {
 
 
 function test_get_time() {
+    /*
+    Sample return:
+        {
+          "abbreviation": "MSK",
+          "client_ip": "89.208.171.38",
+          "datetime": "2021-08-30T11:32:40.761822+03:00",
+          "day_of_week": 1,
+          "day_of_year": 242,
+          "dst": false,
+          "dst_from": null,
+          "dst_offset": 0,
+          "dst_until": null,
+          "raw_offset": 10800,
+          "timezone": "Europe/Moscow",
+          "unixtime": 1630312360,
+          "utc_datetime": "2021-08-30T08:32:40.761822+00:00",
+          "utc_offset": "+03:00",
+          "week_number": 35
+        }
+     */
     fetch('http://worldtimeapi.org/api/timezone/Europe/Moscow')
         .then(res => res.json())
         .then((out) => {
-            console.log('Output: ', out);
-        }).catch(err => console.error(err));
+            let internet_time = new Date(out.datetime)
+            console.log('Internet time: ', internet_time);
 
-    var now = new Date();
-    // console.log(now)
+            let computer_time = new Date();
+            let difference = (computer_time-internet_time)/1000
+            // console.log('computer_time', computer_time)
+            // console.log('difference, s', difference)
+            // console.log('type computer_time', typeof computer_time)
+            // console.log('type internet_time', typeof internet_time)
+            $('#delta').text(difference+'s')
+        }).catch(err => console.error(err));
 }
 
 
