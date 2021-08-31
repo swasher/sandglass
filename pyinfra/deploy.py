@@ -31,7 +31,7 @@ server.shell(
 
 server.shell(
     name='Restart gunicorn',
-    # get_pty=True,
+    get_pty=True,
     # sudo=True,
     # use_sudo_password=True,
     stdin=SUDO_PASS,

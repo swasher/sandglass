@@ -6,7 +6,25 @@ from django.contrib.auth.models import User
 @admin.register(Timing)
 class TimingAdmin(admin.ModelAdmin):
 
-    list_display = ('prepresser', 'order', 'manager', 'jobnote', 'signatime', 'designtime', 'packagetime')
+    def signatime_(self, obj):
+        return str(obj.signatime).split('.', 2)[0]
+
+    def designtime_(self, obj):
+        return str(obj.designtime).split('.', 2)[0]
+
+    def packagetime_(self, obj):
+        return str(obj.packagetime).split('.', 2)[0]
+
+    signatime_.admin_order_field = 'timefield'
+    signatime_.short_description = 'Signa time'
+
+    designtime_.admin_order_field = 'timefield'
+    designtime_.short_description = 'Design time'
+
+    packagetime_.admin_order_field = 'timefield'
+    packagetime_.short_description = 'Package time'
+
+    list_display = ('prepresser', 'order', 'manager', 'jobnote', 'signatime_', 'designtime_', 'packagetime_', 'is_order', 'design_is_paid')
     search_fields = ['order']
 
 

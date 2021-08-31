@@ -32,6 +32,7 @@ class Timing(models.Model):
     manager = models.ForeignKey(Manager, on_delete=models.CASCADE, null=True, blank=True)
     jobnote = models.CharField(max_length=100, null=True, blank=True)
     is_order = models.BooleanField()
+    design_is_paid = models.BooleanField()
 
     def alltime(self):
         return self.designtime + self.packagetime + self.designtime
