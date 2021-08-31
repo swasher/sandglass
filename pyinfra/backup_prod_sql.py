@@ -16,6 +16,6 @@ server.shell(
     # get_pty=True,
     stdin=DBPASS,
     commands=[
-        f'pg_dump -h localhost -p 5432 -U {DBUSER} -F c -b -v -f dump_`date +\%d.\%m.\%Y-\%H.\%M.\%S`.sql {DBNAME}'
+        f'pg_dump -h localhost -p 5432 -U {DBUSER} -F c -b -v -f sql_`date +\%d.\%m.\%Y-\%H.\%M.\%S`.dump {DBNAME}'
     ],
 )

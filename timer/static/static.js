@@ -115,8 +115,8 @@ function activate_manager_mask_and_validation() {
         let container = document.getElementById('datalistOptions');
         let str=''; // variable to store the options
 
-        for (let i=0; i < optionList.length;++i){
-            str += '<option value="'+optionList[i]+'" />'; // Storing options in variable
+        for (var i=0; i < optionList.length;++i){  // тут должен быть именно var i, чтобы i осталось видимым дальше.
+            str += '<option value="'+optionList[i]+'" />';
             // example <option value="{{ manager.id }}"> {{ manager.name }} </option>
         }
 
@@ -248,10 +248,10 @@ function test_get_time() {
         .then(res => res.json())
         .then((out) => {
             let internet_time = new Date(out.datetime)
-            console.log('Internet time: ', internet_time);
-
             let computer_time = new Date();
+
             let difference = (computer_time-internet_time)/1000
+            // console.log('Internet time: ', internet_time);
             // console.log('computer_time', computer_time)
             // console.log('difference, s', difference)
             // console.log('type computer_time', typeof computer_time)
@@ -293,12 +293,35 @@ $(document).ready(function () {
             })
         }
 
+        function add_date_to_jobnote(note) {
+            /*
+            Проверка, содержит ли УЖЕ строка дату.
+            Если нет, добавляет дату в начале строки, иначе возвращает строку неизменно.
+             */
+
+            // Конструкция || [] возвращает пустой словарь вместо None, если совпад. не найдено, и у этого словаря длина - ноль.
+            // containDate содержит 0, если в строке нет даты, и 1, если содержит
+            let containDate = note.match(/^\d{4}-\w{3}-\d/)|| []
+
+            if (!containDate.length) {
+                let now = new Date();
+                // date_string will be date as "2009-Feb-1"
+                let date_string = now.getFullYear()+'-'+now.toLocaleString('en', { month: 'short' })+'-'+now.getDate();
+                note = date_string + ' ' + note
+            }
+            return note
+        }
+
         if (active_tab === 'nav-tab-order' && valid_order) {
             data['order'] = $('#order').val()
             doajax()
         } else if (active_tab === 'nav-tab-manager' && valid_manager && valid_jobnote) {
+            // add date to jobnote
+            let noteField = $('#jobnote')
+            let note = add_date_to_jobnote(noteField.val())
+            noteField.val(note)
+            data['jobnote'] = noteField.val()
             data['managerid'] = $('#sel-manager').val()
-            data['jobnote'] = $('#jobnote').val()
             doajax()
         } else {
             console.log('Input invalidate!')

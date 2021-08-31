@@ -6,3 +6,4 @@ temp
 /timer/test.py
 /timer/ICSPortal.xml
 *.log
+/pyinfra/backupdb/

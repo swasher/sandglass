@@ -17,7 +17,7 @@ cleardb:
 	#python manage.py loaddata manager
 	python manage.py createsuperuser --username=swasher --email=mr.swasher@gmail.com;
 
-fixtures:
+save_manager_fixtures:
 	python manage.py dumpdata timer.Manager --indent 4 --output timer/fixtures/manager.json
 
 build:
@@ -28,3 +28,6 @@ up:
 
 make_requirements:
 	pipenv run pip freeze > requirements.txt
+
+dockerbash:
+	docker exec -it sandglass_db_1 bash

@@ -3,28 +3,108 @@
     "model": "timer.manager",
     "pk": 1,
     "fields": {
-        "name": "Иванов"
+        "email": "akademon@inbox.ru",
+        "name": "Дима",
+        "asystem_name": "Дима"
     }
 },
 {
     "model": "timer.manager",
     "pk": 2,
     "fields": {
-        "name": "Бирюков"
+        "email": "oleg@maxprint.ru",
+        "name": "Олег",
+        "asystem_name": "Олег"
     }
 },
 {
     "model": "timer.manager",
     "pk": 3,
     "fields": {
-        "name": "Шубин"
+        "email": "svi@maxprint.ru",
+        "name": "Сергей",
+        "asystem_name": "Сергей"
     }
 },
 {
     "model": "timer.manager",
     "pk": 4,
     "fields": {
-        "name": "Никофоров"
+        "email": "igor@maxprint.ru",
+        "name": "Игорь",
+        "asystem_name": "Игорь"
+    }
+},
+{
+    "model": "timer.manager",
+    "pk": 5,
+    "fields": {
+        "email": "adelya@maxprint.ru",
+        "name": "Аделя",
+        "asystem_name": "Абдурахманова А."
+    }
+},
+{
+    "model": "timer.manager",
+    "pk": 6,
+    "fields": {
+        "email": "vasiliy@maxprint.ru",
+        "name": "Вася",
+        "asystem_name": "Хан В."
+    }
+},
+{
+    "model": "timer.manager",
+    "pk": 7,
+    "fields": {
+        "email": "avn@maxprint.ru",
+        "name": "Нагаев",
+        "asystem_name": "Нагаев А."
+    }
+},
+{
+    "model": "timer.manager",
+    "pk": 8,
+    "fields": {
+        "email": "avs@maxprint.ru",
+        "name": "Соколов",
+        "asystem_name": "Соколов А."
+    }
+},
+{
+    "model": "timer.manager",
+    "pk": 9,
+    "fields": {
+        "email": "yana@maxprint.ru",
+        "name": "Яна",
+        "asystem_name": "Спиренкова Я."
+    }
+},
+{
+    "model": "timer.manager",
+    "pk": 10,
+    "fields": {
+        "email": "da@maxprint.ru",
+        "name": "Даша",
+        "asystem_name": "Цветкова Д."
+    }
+},
+{
+    "model": "timer.manager",
+    "pk": 11,
+    "fields": {
+        "email": "fpo@maxprint.ru",
+        "name": "Феликс",
+        "asystem_name": "Озаринский Ф."
+    }
+},
+{
+    "model": "timer.manager",
+    "pk": 12,
+    "fields": {
+        "email": "ez@maxprint.ru",
+        "name": "Заботкина",
+        "asystem_name": "Заботкина Е."
     }
 }
 ]

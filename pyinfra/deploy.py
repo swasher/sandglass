@@ -4,6 +4,9 @@ pyinfra inventory.py deploy.py  -vvv
 
 from pyinfra.operations import apt, server, files
 from pyinfra.api import deploy
+from decouple import config
+
+SUDO_PASS = config('SUDO_PASS')
 
 server.shell(
     name='Run an ad-hoc command',
@@ -18,6 +21,18 @@ server.shell(
         '/home/swasher/.local/bin/pipenv run python manage.py migrate',
 
         # 'sudo systemctl restart gunicorn',
+        # 'sudo systemctl restart nginx'
+    ],
+)
+
+server.shell(
+    name='Restart gunicorn',
+    get_pty=True,
+    # sudo=True,
+    # use_sudo_password=True,
+    stdin=SUDO_PASS,
+    commands=[
+        'sudo systemctl restart gunicorn',
         # 'sudo systemctl restart nginx'
     ],
 )
