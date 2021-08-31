@@ -9,25 +9,29 @@ from decouple import config
 SUDO_PASS = config('SUDO_PASS')
 
 server.shell(
-    name='Run an ad-hoc command',
+    name='Git fetch and reset',
     chdir='sandglass',
-    get_pty=True,
-    stdin='yes',
     commands=[
         'git fetch --all',
         'git reset --hard origin/master',
+    ],
+)
+
+server.shell(
+    name='Run django related commands',
+    chdir='sandglass',
+    # get_pty=True,
+    stdin='yes',
+    commands=[
         '/home/swasher/.local/bin/pipenv install',
         '/home/swasher/.local/bin/pipenv run python manage.py collectstatic',
         '/home/swasher/.local/bin/pipenv run python manage.py migrate',
-
-        # 'sudo systemctl restart gunicorn',
-        # 'sudo systemctl restart nginx'
     ],
 )
 
 server.shell(
     name='Restart gunicorn',
-    get_pty=True,
+    # get_pty=True,
     # sudo=True,
     # use_sudo_password=True,
     stdin=SUDO_PASS,

@@ -31,6 +31,7 @@ class Timing(models.Model):
     packagetime = models.DurationField(default=timedelta)
     manager = models.ForeignKey(Manager, on_delete=models.CASCADE, null=True, blank=True)
     jobnote = models.CharField(max_length=100, null=True, blank=True)
+    is_order = models.BooleanField()
 
     def alltime(self):
         return self.designtime + self.packagetime + self.designtime
@@ -52,6 +53,7 @@ class RawData(models.Model):
     jobtype = models.CharField(max_length=12, choices=PRODUCE_WORK, null=True, blank=True)
     manager = models.ForeignKey(Manager, null=True, on_delete=models.CASCADE)
     jobnote = models.CharField(max_length=100, null=True, blank=True)
+    is_order = models.BooleanField()
 
     def __str__(self):
         return '%s %s %s %s' % (self.prepresser, self.order, self.button, self.time)
