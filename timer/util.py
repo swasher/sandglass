@@ -54,7 +54,8 @@ def get_fulltime_by_order(order):
     """
     try:
         obj = Timing.objects.get(order=order)
-        fulltime = obj.signatime + obj.designtime + obj.packagetime
+        # signatime etc. is timedelta object, `seconds` return int
+        fulltime = (obj.signatime + obj.designtime + obj.packagetime).seconds
     except Timing.DoesNotExist:
         fulltime = 0
     return fulltime
@@ -65,14 +66,12 @@ def get_fulltime_by_manager(managerid, note):
     if obj.count() == 0:
         fulltime = 0
     elif obj.count() == 1:
-        fulltime = obj.signatime + obj.designtime + obj.packagetime
+        fulltime = (obj.signatime + obj.designtime + obj.packagetime).seconds
     else:
         # для каждого манагера описания работ - уникальны.
         # Если в базе больше одного - значит, что-то пошло не так в системе.
         raise Exception
     return fulltime
-
-
 
 
 def get_order_info(order):

@@ -225,7 +225,7 @@ function restore_on_reload() {
 }
 
 
-function test_get_time() {
+function time_difference() {
     /*
     Sample return:
         {
@@ -268,8 +268,9 @@ $(document).ready(function () {
     activate_manager_mask_and_validation()
     activate_jobnote_mask_and_validation()
     restore_on_reload()
+    time_difference()
+    order.onkeyup= e => (e.key=="Enter") ? startButton.click() : 1
 
-    test_get_time()
 
     $('#startButton').on('click', function () {
         let active_tab = document.querySelectorAll('#nav-tab button[aria-selected="true"]')[0].id
