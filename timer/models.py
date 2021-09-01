@@ -25,14 +25,14 @@ class Timing(models.Model):
 
     # laststarttime: models.TimeField()
     prepresser = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    order = models.CharField(max_length=7)
+    order = models.CharField(max_length=7, null=True, blank=True)
     signatime = models.DurationField(default=timedelta)
     designtime = models.DurationField(default=timedelta)
     packagetime = models.DurationField(default=timedelta)
     manager = models.ForeignKey(Manager, on_delete=models.CASCADE, null=True, blank=True)
     jobnote = models.CharField(max_length=100, null=True, blank=True)
-    is_order = models.BooleanField()
-    design_is_paid = models.BooleanField()
+    is_order = models.BooleanField(help_text="Являлась ли работа изначально заказом или работой от менеджера")
+    design_is_paid = models.BooleanField(default=False)
 
     def alltime(self):
         return self.designtime + self.packagetime + self.designtime
@@ -54,7 +54,6 @@ class RawData(models.Model):
     jobtype = models.CharField(max_length=12, choices=PRODUCE_WORK, null=True, blank=True)
     manager = models.ForeignKey(Manager, null=True, on_delete=models.CASCADE)
     jobnote = models.CharField(max_length=100, null=True, blank=True)
-    is_order = models.BooleanField()
 
     def __str__(self):
         return '%s %s %s %s' % (self.prepresser, self.order, self.button, self.time)

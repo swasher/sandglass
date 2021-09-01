@@ -7,3 +7,5 @@ temp
 /timer/ICSPortal.xml
 *.log
 /pyinfra/backupdb/
+/pyinfra/postgres.txt
+/pyinfra/postgres.md

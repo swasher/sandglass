@@ -9,14 +9,13 @@ from decouple import config
 from pyinfra.facts.server import Command
 
 
-
-DBUSER = config('DATABASE_USER')
 DBNAME = config('DATABASE_NAME')
+DBUSER = config('DATABASE_USER')
 DBPASS = config('DATABASE_PASSWORD')
-CONTAINER = 'sandglass_db_1'
-DEV_DBNAME = 'postgres'
-DEV_DBUSER = 'postgres'
-
+CONTAINER = config('CONTAINER')
+DEV_DBNAME = config('DEV_DBNAME')
+DEV_DBUSER = config('DEV_DBUSER')
+DUMPFILE = '/root/sql.dump'
 
 # server.shell(
 #     name='TEST',
@@ -35,23 +34,56 @@ DEV_DBUSER = 'postgres'
 # )
 #
 
-local.shell(
-    commands=[
-        'docker compose down',
-        'docker volume rm sandglass_postgres_data',
-        'docker compose up -d',
-        'sleep 3',
-        'cd .. && python manage.py makemigrations timer',
-        'python manage.py migrate',
-        # 'python manage.py loaddata manager',
-        'python manage.py createsuperuser - -username = swasher - -email = mr.swasher @ gmail.com;'
-    ]
-)
+# local.shell(
+#     commands=[
+#         'docker compose down',
+#         'docker volume rm sandglass_postgres_data',
+#         'docker compose up -d',
+#         'sleep 3',
+#         'cd .. && python manage.py makemigrations timer',
+#         'python manage.py migrate',
+#         # 'python manage.py loaddata manager',
+#         'python manage.py createsuperuser - -username = swasher - -email = mr.swasher @ gmail.com;'
+#     ]
+# )
 
 # server.shell(
 #     name='TEST2',
 #     commands=f'echo {a}'
 # )
+
+server.shell(
+    name='Get dump',
+    commands=[
+        f"pg_dump -h sandglass -U {DBUSER} -Fc -v {DBNAME} -f {DUMPFILE}",
+    ]
+)
+server.shell(
+    name='Drop database',
+    commands=[
+        f"su - postgres -c 'dropdb -f {DEV_DBNAME}'",
+    ]
+)
+server.shell(
+    name='Create database',
+    commands=[
+        f"su - postgres -c 'createdb -T template0 {DEV_DBNAME}'",
+    ]
+)
+server.shell(
+    name='Load dump into db',
+    commands=[
+        f"su - postgres -c 'pg_restore -d {DEV_DBNAME} {DUMPFILE}'",
+    ]
+)
+server.shell(
+    name='Restart postgres',
+    commands=[
+        "su - postgres -c '/etc/init.d/postgresql restart'",
+    ]
+)
+
+
 
 server.shell(
     # pg_restore -U username -d dbname -1 filename.dump
@@ -64,8 +96,7 @@ server.shell(
 
     commands=[
         # f"su - postgres -c '/usr/lib/postgresql/13/bin/pg_ctl -w restart'",
-        "su - postgres -c '/etc/init.d/postgresql restart'",
-        f"su - postgres -c 'dropdb {DEV_DBNAME}'",
+        # f"su - postgres -c 'dropdb {DEV_DBNAME}'",
         # f'pg_restore -U {DEV_DBUSER} -v -d {DEV_DBNAME} < /dir_backup_outside_container/file_name.tar',
     ]
 )

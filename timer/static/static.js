@@ -53,7 +53,6 @@ function activate_order_mask_and_validation() {
 
     valid_control()
 
-
     function log() {
         console.log('value', mask.value)
         console.log('unmaskedValue', mask.unmaskedValue)
@@ -154,8 +153,10 @@ function activate_manager_mask_and_validation() {
 function set_state_running(sec, restoring) {
     timer.start({precision: 'secondTenths', startValues: {seconds: sec}})
 
+    console.log('Restoring may be dont need, but `restoring` is', Boolean(restoring))
     if (restoring) {
-        if (restoring.order !== null) {
+        console.log('restoring.tab', restoring['tab'])
+        if (restoring.tab === 'first') {
             console.log('activate first tab...')
             let sel = document.querySelector('#nav-tab-order')
             bootstrap.Tab.getOrCreateInstance(sel).show()
@@ -207,7 +208,7 @@ function set_state_stopped() {
 
 function restore_on_reload() {
     // TODO нужно возвращать номер заказа, манагера и дескрипшн
-    if (restoring.duration) {
+    if (restoring.needed) {
         // сюда попадаем, если юзер включил таймер и перезагрузил страницу. Django возвращает в переменной
         // duration, сколько прошоло времени с запуска
         console.log('restoring order:', restoring.order)
@@ -276,10 +277,11 @@ $(document).ready(function () {
         let valid_jobnote = document.getElementById('jobnote').classList.contains('is-valid')
 
         let data = {}
-        data['active_tab'] = active_tab
+        // deprecated 31.08.21
+        // data['active_tab'] = active_tab
         data['jobtype'] = $('input[name="jobRadio"]:checked').val();
 
-        function doajax() {
+        function doajax(data) {
             $.ajax({
                 url: '/click_start/',
                 data: data,
@@ -314,7 +316,8 @@ $(document).ready(function () {
 
         if (active_tab === 'nav-tab-order' && valid_order) {
             data['order'] = $('#order').val()
-            doajax()
+            data['is_order'] = true
+            doajax(data)
         } else if (active_tab === 'nav-tab-manager' && valid_manager && valid_jobnote) {
             // add date to jobnote
             let noteField = $('#jobnote')
@@ -322,7 +325,8 @@ $(document).ready(function () {
             noteField.val(note)
             data['jobnote'] = noteField.val()
             data['managerid'] = $('#sel-manager').val()
-            doajax()
+            data['is_order'] = false
+            doajax(data)
         } else {
             console.log('Input invalidate!')
             // нужно выяснить, на какой мы вкладке, и потом передевать фокус
@@ -342,9 +346,11 @@ $(document).ready(function () {
 
         if (active_tab === 'nav-tab-order' && valid_order) {
             data['order'] = $('#order').val()
+            data['is_order'] = true
         } else if (active_tab === 'nav-tab-manager' && valid_manager && valid_jobnote) {
             data['managerid'] = $('#sel-manager').val()
             data['jobnote'] = $('#jobnote').val()
+            data['is_order'] = false
         } else {
             console.log('Input invalidate!')
             // нужно выяснить, на какой мы вкладке, и потом передевать фокус

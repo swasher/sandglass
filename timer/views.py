@@ -18,11 +18,11 @@ def hello(request):
     managers = Manager.objects.all()
 
     restoring = dict()
-    restoring['needed'] = 'false'  # string for pass to js
+    restoring['needed'] = False
     try:
         last_click = RawData.objects.filter(prepresser=request.user).latest('time')
         if last_click.button == 'start':  # это значит, что старт нажали, и пока бежал секундомер, страница была перезагружена.
-            restoring['needed'] = 'true'
+            restoring['needed'] = True
             restoring['duration'] = int(abs((datetime.datetime.now() - last_click.time).total_seconds()))
             # нужно возвращать (кроме секундомера)
             # активная вкладка
@@ -34,15 +34,26 @@ def hello(request):
             try:
                 restoring['managerid'] = last_click.manager.id
             except AttributeError:
-                restoring['manager'] = None
+                restoring['managerid'] = None
             restoring['jobnote'] = last_click.jobnote
             restoring['jobtype'] = last_click.jobtype
             restoring = json.dumps(restoring)
 
-            if restoring['managerid']:
+            """
+            Тут таки говнокод. Я is_order в Timing добавил, в в RawData нет, типа он там не сильно нужен...
+            И поэтому у меня логика тут опирается не на явный is_order, а на косвенный признак - 
+            есть jobnote или нет. Решил пока так оставить, должно работать.
+            
+            Изменения записей возможны в таблице Timings, но не в RawData - это просто лог и ничего меняться
+            тут не должно. 
+            """
+
+            if restoring['jobnote']:
                 restoring['fulltime'] = get_fulltime_by_manager(restoring['managerid'], restoring['jobnote'])
+                restoring['tab'] = 'second'
             else:
                 restoring['fulltime'] = get_fulltime_by_order(restoring['order'])
+                restoring['tab'] = 'first'
 
             # print('duration', datetime.datetime.now() - last_click.time)
             # print('duration in sec', (datetime.datetime.now() - last_click.time).total_seconds())
@@ -50,6 +61,8 @@ def hello(request):
         last_click = ''
     except TypeError:  # user is not logged in
         last_click = ''
+
+    a = 1
 
     return render(request, 'timer.html', {'managers': managers, 'restoring': restoring})
 
@@ -61,20 +74,20 @@ def click_start(request):
     if request.is_ajax() and request.method == 'GET':
         GET = request.GET
 
-        if GET['active_tab'] == 'nav-tab-order':
-            raw = RawData.objects.create(
+        if GET['is_order'] == 'true':
+            RawData.objects.create(
                 prepresser=request.user,
                 button='start',
                 order=GET['order'],
-                jobtype=GET['jobtype']
+                jobtype=GET['jobtype'],
             ).save()
-        elif GET['active_tab'] == 'nav-tab-manager':
-            raw = RawData.objects.create(
+        elif GET['is_order'] == 'false':
+            RawData.objects.create(
                 prepresser=request.user,
                 button='start',
                 manager=Manager.objects.get(pk=int(GET['managerid'])),
                 jobnote=GET['jobnote'],
-                jobtype=GET['jobtype']
+                jobtype=GET['jobtype'],
             ).save()
         else:
             error = 'not found `active_tab` in GET'
@@ -102,7 +115,7 @@ def click_stop(request):
                 jobtype=jobtype
             )
 
-        if GET['active_tab'] == 'nav-tab-order':
+        if GET['is_order'] == 'true':
             order = GET['order']
             raw.order = order
             raw.save()
@@ -116,9 +129,10 @@ def click_stop(request):
             obj, created = Timing.objects.get_or_create(
                 prepresser=user,
                 order=order,
+                is_order=True
             )
 
-        elif GET['active_tab'] == 'nav-tab-manager':
+        elif GET['is_order'] == 'false':
             manager = Manager.objects.get(pk=int(GET['managerid']))
             jobnote = GET['jobnote']
             raw.manager = manager
@@ -135,11 +149,12 @@ def click_stop(request):
             obj, created = Timing.objects.get_or_create(
                 prepresser=user,
                 manager=manager,
-                jobnote=jobnote
+                jobnote=jobnote,
+                is_order=False
             )
 
         else:
-            error = 'not found `active_tab` in GET'
+            error = 'not found `is_order` in GET'
             return JsonResponse({'error': error})
 
         duration = raw.time - start_time
