@@ -1,3 +1,6 @@
+dummy:
+	echo Dont run without arguments!
+
 user:
 	python manage.py createsuperuser --username=swasher --email=mr.swasher@gmail.com;
 

@@ -3,8 +3,8 @@
 
 {% block head %}
   <script>
-      {#restoring = "{{ restoring|safe }}"#}
-      restoring = {{ restoring|safe }}
+      var restoring = {{ restoring|safe }}
+      restoring['needed'] = (restoring.needed === 'true')  // convert `needed` to bool
       console.log('RESTORING need:', restoring['needed'])
   </script>
   <script src="{% static "static.js" %}"></script>

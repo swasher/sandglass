@@ -52,20 +52,27 @@ def get_fulltime_by_order(order):
     :param order: string, number of order
     :return: datetime, время потраченное на заказ
     """
-    obj = Timing.objects.get(order=order)
-    alltime = obj.signatime + obj.designtime + obj.packagetime
-    return alltime
+    try:
+        obj = Timing.objects.get(order=order)
+        fulltime = obj.signatime + obj.designtime + obj.packagetime
+    except Timing.DoesNotExist:
+        fulltime = 0
+    return fulltime
 
 
 def get_fulltime_by_manager(managerid, note):
     obj = Timing.objects.filter(manager_id=managerid).filter(jobnote=note)
-    if obj.count() > 1:
+    if obj.count() == 0:
+        fulltime = 0
+    elif obj.count() == 1:
+        fulltime = obj.signatime + obj.designtime + obj.packagetime
+    else:
         # для каждого манагера описания работ - уникальны.
         # Если в базе больше одного - значит, что-то пошло не так в системе.
         raise Exception
+    return fulltime
 
-# Наверное, нужно как-то комбинировать дату и jobnote, чтобы создавать подобие идентификатора работы.
-# Потому что у манагера может быть в январе "Красный пакет", и в октябре и в марте.
+
 
 
 def get_order_info(order):

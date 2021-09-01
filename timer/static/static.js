@@ -153,9 +153,7 @@ function activate_manager_mask_and_validation() {
 function set_state_running(sec, restoring) {
     timer.start({precision: 'secondTenths', startValues: {seconds: sec}})
 
-    console.log('Restoring may be dont need, but `restoring` is', Boolean(restoring))
-    if (restoring) {
-        console.log('restoring.tab', restoring['tab'])
+    if (restoring.needed) {
         if (restoring.tab === 'first') {
             console.log('activate first tab...')
             let sel = document.querySelector('#nav-tab-order')
@@ -211,12 +209,15 @@ function restore_on_reload() {
     if (restoring.needed) {
         // сюда попадаем, если юзер включил таймер и перезагрузил страницу. Django возвращает в переменной
         // duration, сколько прошоло времени с запуска
+        let seconds = parseInt(restoring.duration)
+
         console.log('restoring order:', restoring.order)
         console.log('restoring manager:', restoring.manager)
         console.log('restoring jobnote:', restoring.jobnote)
         console.log('restoring jobtype:', restoring.jobtype)
+        console.log('restoring tab:', restoring.tab)
+        console.log('restoring seconds:', seconds)
 
-        let seconds = parseInt(restoring.duration)
         set_state_running(seconds, restoring)
     } else {
         set_state_stopped()

@@ -18,11 +18,11 @@ def hello(request):
     managers = Manager.objects.all()
 
     restoring = dict()
-    restoring['needed'] = False
+    restoring['needed'] = 'false'
     try:
         last_click = RawData.objects.filter(prepresser=request.user).latest('time')
         if last_click.button == 'start':  # это значит, что старт нажали, и пока бежал секундомер, страница была перезагружена.
-            restoring['needed'] = True
+            restoring['needed'] = 'true'
             restoring['duration'] = int(abs((datetime.datetime.now() - last_click.time).total_seconds()))
             # нужно возвращать (кроме секундомера)
             # активная вкладка
@@ -37,7 +37,6 @@ def hello(request):
                 restoring['managerid'] = None
             restoring['jobnote'] = last_click.jobnote
             restoring['jobtype'] = last_click.jobtype
-            restoring = json.dumps(restoring)
 
             """
             Тут таки говнокод. Я is_order в Timing добавил, в в RawData нет, типа он там не сильно нужен...
@@ -48,12 +47,12 @@ def hello(request):
             тут не должно. 
             """
 
-            if restoring['jobnote']:
-                restoring['fulltime'] = get_fulltime_by_manager(restoring['managerid'], restoring['jobnote'])
-                restoring['tab'] = 'second'
-            else:
+            if last_click.jobnote is None:
                 restoring['fulltime'] = get_fulltime_by_order(restoring['order'])
                 restoring['tab'] = 'first'
+            else:
+                restoring['fulltime'] = get_fulltime_by_manager(restoring['managerid'], restoring['jobnote'])
+                restoring['tab'] = 'second'
 
             # print('duration', datetime.datetime.now() - last_click.time)
             # print('duration in sec', (datetime.datetime.now() - last_click.time).total_seconds())
@@ -62,8 +61,7 @@ def hello(request):
     except TypeError:  # user is not logged in
         last_click = ''
 
-    a = 1
-
+    restoring = json.dumps(restoring)
     return render(request, 'timer.html', {'managers': managers, 'restoring': restoring})
 
 
