@@ -8,3 +8,9 @@ restore_from_production:
 
 deploy:
 	pyinfra inventory.py deploy.py
+
+fulldeploy:
+	git add .
+	git commit -am "autodeploy"
+	git push origin master
+	pyinfra inventory.py deploy.py

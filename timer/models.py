@@ -52,7 +52,7 @@ class RawData(models.Model):
     time = models.DateTimeField(auto_now_add=True, help_text="Время нажатия на кнопку")
     order = models.CharField(max_length=7, null=True, blank=True)
     jobtype = models.CharField(max_length=12, choices=PRODUCE_WORK, null=True, blank=True)
-    manager = models.ForeignKey(Manager, null=True, on_delete=models.CASCADE)
+    manager = models.ForeignKey(Manager, null=True, blank=True, on_delete=models.CASCADE)
     jobnote = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
