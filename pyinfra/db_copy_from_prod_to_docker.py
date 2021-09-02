@@ -1,5 +1,5 @@
 """
-pyinfra @docker/sandglass_db_1 restore_devdb_from_file.py -vvv
+pyinfra @docker/sandglass_db_1 db_copy_from_prod_to_docker.py -vvv
 """
 
 from pyinfra.operations import apt, server, files, ssh
@@ -15,7 +15,7 @@ DBPASS = config('DATABASE_PASSWORD')
 CONTAINER = config('CONTAINER')
 DEV_DBNAME = config('DEV_DBNAME')
 DEV_DBUSER = config('DEV_DBUSER')
-DUMPFILE = '/root/sql.dump'
+DUMPFILE = '/home/sql.dump'
 
 # server.shell(
 #     name='TEST',
@@ -54,6 +54,7 @@ DUMPFILE = '/root/sql.dump'
 
 server.shell(
     name='Get dump',
+    stdin=DBPASS,
     commands=[
         f"pg_dump -h sandglass -U {DBUSER} -Fc -v {DBNAME} -f {DUMPFILE}",
     ]
@@ -73,7 +74,7 @@ server.shell(
 server.shell(
     name='Load dump into db',
     commands=[
-        f"su - postgres -c 'pg_restore -d {DEV_DBNAME} {DUMPFILE}'",
+        f"su - postgres -c 'pg_restore --no-privileges --no-owner -d {DEV_DBNAME} {DUMPFILE}'",
     ]
 )
 server.shell(
