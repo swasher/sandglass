@@ -90,6 +90,6 @@ def get_order_info(order):
         info['manager_name'] = xmlroot.findall(f'./{ns}ResourcePool/{ns}Person')[0].get('FirstName')
         info['error'] = 'ok'
     except KeyError:
-        info['error'] = 'Job not found (or another parse error)'
+        info['error'] = 'Job not present or JDF parse error'
 
     return info

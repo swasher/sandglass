@@ -151,9 +151,14 @@ function activate_manager_mask_and_validation() {
 
 
 function set_state_running(sec, restoring) {
+    /*
+    Мы вызываем эту функцию в двух случаях - при нажатии кнопки Start (т.е. первый запуск, и при нажатии F5, т.е. когда
+    нам нужно вернуть состояние всех полей. В первом случае в restroring вызывающая функция передает null, и содержимое
+    полей мы не трогаем, только дизаблим
+     */
     timer.start({precision: 'secondTenths', startValues: {seconds: sec}})
 
-    if (restoring.needed) {
+    if (restoring) {
         if (restoring.tab === 'first') {
             console.log('activate first tab...')
             let sel = document.querySelector('#nav-tab-order')
@@ -269,7 +274,16 @@ $(document).ready(function () {
     activate_jobnote_mask_and_validation()
     restore_on_reload()
     time_difference()
-    order.onkeyup= e => (e.key=="Enter") ? startButton.click() : 1
+
+
+    $("#order").keyup(function (event) {
+     if (event.which == 13) {
+         event.preventDefault();
+         $('#startButton').click();
+         console.log('click event - lets start!');
+     }
+    });
+
 
 
     $('#startButton').on('click', function () {
