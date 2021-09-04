@@ -163,6 +163,8 @@ def click_stop(request):
             obj.packagetime += duration
         elif jobtype == 'Design':
             obj.designtime += duration
+        elif jobtype == 'Pers':
+            obj.perstime += duration
         else:
             raise Exception
         obj.save()

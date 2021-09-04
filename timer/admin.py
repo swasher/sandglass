@@ -15,6 +15,9 @@ class TimingAdmin(admin.ModelAdmin):
     def packagetime_(self, obj):
         return str(obj.packagetime).split('.', 2)[0]
 
+    def perstime_(self, obj):
+        return str(obj.packagetime).split('.', 2)[0]
+
     signatime_.admin_order_field = 'timefield'
     signatime_.short_description = 'Signa time'
 
@@ -24,7 +27,10 @@ class TimingAdmin(admin.ModelAdmin):
     packagetime_.admin_order_field = 'timefield'
     packagetime_.short_description = 'Package time'
 
-    list_display = ('prepresser', 'order', 'manager', 'jobnote', 'signatime_', 'designtime_', 'packagetime_', 'is_order', 'design_is_paid')
+    perstime_.admin_order_field = 'timefield'
+    perstime_.short_description = 'Pers time'
+
+    list_display = ('prepresser', 'order', 'manager', 'jobnote', 'signatime_', 'designtime_', 'packagetime_', 'perstime_', 'is_order', 'design_is_paid')
     search_fields = ['order']
 
 

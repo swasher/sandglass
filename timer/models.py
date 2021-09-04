@@ -20,7 +20,8 @@ class Timing(models.Model):
     PRODUCE_WORK = [
         ('Signa', 'Signa'),
         ('Design', 'Design'),
-        ('Package', 'Package')
+        ('Package', 'Package'),
+        ('Pers', 'Pers')
     ]
 
     # laststarttime: models.TimeField()
@@ -29,13 +30,14 @@ class Timing(models.Model):
     signatime = models.DurationField(default=timedelta)
     designtime = models.DurationField(default=timedelta)
     packagetime = models.DurationField(default=timedelta)
+    perstime = models.DurationField(default=timedelta)
     manager = models.ForeignKey(Manager, on_delete=models.CASCADE, null=True, blank=True)
     jobnote = models.CharField(max_length=100, null=True, blank=True)
     is_order = models.BooleanField(help_text="Являлась ли работа изначально заказом или работой от менеджера")
     design_is_paid = models.BooleanField(default=False)
 
     def alltime(self):
-        return self.designtime + self.packagetime + self.designtime
+        return self.designtime + self.packagetime + self.designtime + self.perstime
 
     def __str__(self):
         return ' '.join([self.prepresser.username, str(self.alltime())])
@@ -45,7 +47,8 @@ class RawData(models.Model):
     PRODUCE_WORK = [
         ('Signa', 'Signa'),
         ('Design', 'Design'),
-        ('Package', 'Package')
+        ('Package', 'Package'),
+        ('Pers', 'Pers')
     ]
     prepresser = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     button = models.CharField(max_length=10, choices=[('start', 'start'), ('stop', 'stop')])
