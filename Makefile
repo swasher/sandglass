@@ -1,5 +1,5 @@
 dummy:
-	echo Dont run without arguments!
+	@echo Dont run without arguments!
 
 user:
 	python manage.py createsuperuser --username=swasher --email=mr.swasher@gmail.com;
@@ -34,3 +34,12 @@ make_requirements:
 
 dockerbash:
 	docker exec -it sandglass_db_1 bash
+
+deploy:
+	pyinfra infra\inventory.py infra\deploy.py
+
+fulldeploy:
+	git add .
+	git commit -am "autodeploy"
+	git push origin master
+	pyinfra infra\inventory.py infra\deploy.py

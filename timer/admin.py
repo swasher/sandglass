@@ -16,7 +16,7 @@ class TimingAdmin(admin.ModelAdmin):
         return str(obj.packagetime).split('.', 2)[0]
 
     def perstime_(self, obj):
-        return str(obj.packagetime).split('.', 2)[0]
+        return str(obj.perstime).split('.', 2)[0]
 
     signatime_.admin_order_field = 'timefield'
     signatime_.short_description = 'Signa time'
