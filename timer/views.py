@@ -53,9 +53,6 @@ def hello(request):
             else:
                 restoring['fulltime'] = get_fulltime_by_manager(restoring['managerid'], restoring['jobnote'])
                 restoring['tab'] = 'second'
-
-            # print('duration', datetime.datetime.now() - last_click.time)
-            # print('duration in sec', (datetime.datetime.now() - last_click.time).total_seconds())
     except ObjectDoesNotExist:  # empty database
         last_click = ''
     except TypeError:  # user is not logged in
@@ -68,7 +65,8 @@ def hello(request):
 @login_required
 @ensure_csrf_cookie
 def click_start(request):
-    error = 'ok'
+    restoring = dict()
+    restoring['error'] = 'ok'
     if request.is_ajax() and request.method == 'GET':
         GET = request.GET
 
@@ -79,6 +77,7 @@ def click_start(request):
                 order=GET['order'],
                 jobtype=GET['jobtype'],
             ).save()
+            restoring['fulltime'] = get_fulltime_by_order(GET['order'])
         elif GET['is_order'] == 'false':
             RawData.objects.create(
                 prepresser=request.user,
@@ -87,13 +86,19 @@ def click_start(request):
                 jobnote=GET['jobnote'],
                 jobtype=GET['jobtype'],
             ).save()
-        else:
-            error = 'not found `active_tab` in GET'
-    else:
-        error = 'non ajax or non GET'
+            restoring['fulltime'] = get_fulltime_by_manager(GET['managerid'], GET['jobnote'])
 
-    results = {'error': error}
-    return JsonResponse(results)
+
+        else:
+            restoring['error'] = 'not found `active_tab` in GET'
+    else:
+        restoring['error'] = 'non ajax or non GET'
+
+    # После нажатия start у нас duration всегда ноль, а вкладка - первая
+    restoring['duration'] = 0
+    restoring['tab'] = GET['tab']
+    restoring['needed'] = 'false'
+    return JsonResponse(restoring)
 
 
 @login_required

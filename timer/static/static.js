@@ -150,15 +150,16 @@ function activate_manager_mask_and_validation() {
 }
 
 
-function set_state_running(sec, restoring) {
+function set_state_running(restoring) {
     /*
     Мы вызываем эту функцию в двух случаях - при нажатии кнопки Start (т.е. первый запуск, и при нажатии F5, т.е. когда
     нам нужно вернуть состояние всех полей. В первом случае в restroring вызывающая функция передает null, и содержимое
     полей мы не трогаем, только дизаблим
      */
+    let sec = restoring.duration + restoring.fulltime
     timer.start({precision: 'secondTenths', startValues: {seconds: sec}})
 
-    if (restoring) {
+    if (restoring.needed) {
         if (restoring.tab === 'first') {
             console.log('activate first tab...')
             let sel = document.querySelector('#nav-tab-order')
@@ -213,7 +214,9 @@ function restore_on_reload() {
     // TODO нужно возвращать номер заказа, манагера и дескрипшн
     if (restoring.needed) {
         // сюда попадаем, если юзер включил таймер и перезагрузил страницу. Django возвращает в переменной
-        // duration, сколько прошоло времени с запуска
+        // duration, сколько прошоло времени с запуска (вычисляется по таблице RawData, а в fulltime -
+        // общее время заказа, по таблице Timing. То есть если жать F5, duration будет увеличиваться,
+        // а fulltime оставаться неизменным. Таймер на страничке нужно запускать с duration+fulltime
         let seconds = parseInt(restoring.duration)
 
         console.log('restoring order:', restoring.order)
@@ -221,9 +224,10 @@ function restore_on_reload() {
         console.log('restoring jobnote:', restoring.jobnote)
         console.log('restoring jobtype:', restoring.jobtype)
         console.log('restoring tab:', restoring.tab)
+        console.log('restoring fulltime:', restoring.fulltime)
         console.log('restoring seconds:', seconds)
 
-        set_state_running(seconds, restoring)
+        set_state_running(restoring)
     } else {
         set_state_stopped()
     }
@@ -292,8 +296,6 @@ $(document).ready(function () {
      }
     });
 
-
-
     $('#startButton').on('click', function () {
         let active_tab = document.querySelectorAll('#nav-tab button[aria-selected="true"]')[0].id
         let valid_order = document.getElementById('order').classList.contains('is-valid')
@@ -301,8 +303,7 @@ $(document).ready(function () {
         let valid_jobnote = document.getElementById('jobnote').classList.contains('is-valid')
 
         let data = {}
-        // deprecated 31.08.21
-        // data['active_tab'] = active_tab
+        data['tab'] = active_tab
         data['jobtype'] = $('input[name="jobRadio"]:checked').val();
 
         function doajax(data) {
@@ -313,7 +314,8 @@ $(document).ready(function () {
                 success: function (answer) {
                     console.log('«START» RETURNED DATA:', answer['error'])
                     if (answer['error'] === 'ok') {
-                        set_state_running(0, null)
+                        answer.needed = JSON.parse(answer.needed)  // convert string to bool
+                        set_state_running(answer)
                     }
                 }
             })
