@@ -276,7 +276,15 @@ $(document).ready(function () {
     time_difference()
 
 
-    $("#order").keyup(function (event) {
+    $("#order").keydown(function (event) {
+     if (event.which == 13) {
+         event.preventDefault();
+         $('#startButton').click();
+         console.log('click event - lets start!');
+     }
+    });
+
+    $("#jobnote").keydown(function (event) {
      if (event.which == 13) {
          event.preventDefault();
          $('#startButton').click();

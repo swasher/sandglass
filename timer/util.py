@@ -62,10 +62,11 @@ def get_fulltime_by_order(order):
 
 
 def get_fulltime_by_manager(managerid, note):
-    obj = Timing.objects.filter(manager_id=managerid).filter(jobnote=note)
-    if obj.count() == 0:
+    objquery = Timing.objects.filter(manager_id=managerid).filter(jobnote=note)
+    if objquery.count() == 0:
         fulltime = 0
-    elif obj.count() == 1:
+    elif objquery.count() == 1:
+        obj = objquery[0]
         fulltime = (obj.signatime + obj.designtime + obj.packagetime + obj.perstime).seconds
     else:
         # для каждого манагера описания работ - уникальны.

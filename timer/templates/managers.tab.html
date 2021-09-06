@@ -1,19 +1,5 @@
 <form class="row mt-2 w-75">
 
-{#  <div class="col-4">#}
-{#    <input class="form-control" autocomplete="off"  list="datalistOptions" id="sel-manager" placeholder="Выбери манагера...">#}
-{#    <datalist id="datalistOptions">#}
-{#      {% for manager in managers %}#}
-{#        <option id="{{ manager.id }}" value="{{ manager.name }}"></option>#}
-{#      {% endfor %}#}
-{#    </datalist>#}
-{#    <div class="valid-feedback">#}
-{#      Looks good!#}
-{#    </div>#}
-{#    <div class="invalid-feedback">#}
-{#      Missing manager.#}
-{#    </div>#}
-{#  </div>#}
 
   <div class="col-4">
     <select class="form-select" aria-label="Default select example" id="sel-manager">
@@ -30,15 +16,6 @@
     </div>
   </div>
 
-{#  <div class="col-8">#}
-{#    <input id="jobnote" class="form-control" placeholder="Понятное описание работы" autocomplete="on">#}
-{#    <div class="valid-feedback">#}
-{#      Looks good!#}
-{#    </div>#}
-{#    <div class="invalid-feedback">#}
-{#      Too short description.#}
-{#    </div>#}
-{#  </div>#}
 
   <div class="col-7">
     <input class="form-control" autocomplete="off"  list="datalistOptions" id="jobnote" placeholder="Понятное описание работы">
@@ -53,12 +30,5 @@
       <span class="badge bg-info">0</span> Too short description.
     </div>
   </div>
-
-
-{##}
-{#  <div id="count" class="col pt-1">#}
-{#      <span class="badge bg-info">0</span>#}
-{#  </div>#}
-
 
 </form>
